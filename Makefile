@@ -1,10 +1,12 @@
 .POSIX:
 
+ROOTDIR  = $$PWD
+
 all:
 	@if [ ! -d build ]; then \
-		mkdir build;    \
+		mkdir build;     \
 	fi
-	@cd build; voc -s ${.CURDIR}/src/skprLogger.Mod
+	@cd build; voc -s ${ROOTDIR}/../src/skprLogger.Mod
 
 clean:
 	rm -rf build
