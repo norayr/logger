@@ -1,14 +1,17 @@
 VOC = /opt/voc/bin/voc
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir_path := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+ifndef BUILD
 BUILD="build"
+endif
 build_dir_path := $(mkfile_dir_path)/$(BUILD)
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 BLD := $(mkfile_dir_path)/build
 DPD  =  deps
+ifndef DPS
 DPS := $(mkfile_dir_path)/$(DPD)
-
-all: get_deps build_deps build
+endif
+all: get_deps build_deps buildSkprLogger
 
 get_deps:
 	mkdir -p $(DPS)
@@ -17,10 +20,15 @@ get_deps:
 build_deps:
 	mkdir -p $(BUILD)
 	cd $(BUILD)
-	make -f $(mkfile_dir_path)/$(DPD)/time/GNUmakefile BUILD=$(BLD)
+	make -f $(DPS)/time/GNUmakefile BUILD=$(BUILD)
 
-build:
-	cd $(BLD) && $(VOC) -s $(mkfile_dir_path)/src/time.Mod
+buildSkprLogger:
+	cd $(BUILD) && $(VOC) -s $(mkfile_dir_path)/src/skprLogger.Mod
+
+tests:
+	#no tests
+	#cd $(BUILD) && $(VOC) $(mkfile_dir_path)/test/testList.Mod -m
+	#build/testList
 
 clean:
-	if [ -d "$(BLD)" ]; then rm -rf $(BLD); fi
+	if [ -d "$(BUILD)" ]; then rm -rf $(BLD); fi
